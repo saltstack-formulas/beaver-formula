@@ -1,0 +1,10 @@
+{% set beaver = salt['grains.filter_by']({
+    'Debian': {
+        'pip': 'python-pip',
+        'zmq': 'libzmq-dev',
+    },
+    'RedHat': {
+        'pip': 'python-pip',
+        'zmq': 'zeromq-devel',
+    },
+}, merge=salt['pillar.get']('beaver:lookup')) %}

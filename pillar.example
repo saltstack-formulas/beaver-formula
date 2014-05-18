@@ -1,0 +1,16 @@
+beaver_test:
+  global:
+    since_db_path: /var/log/since.db
+    server_type: redis
+    redis_host: hostname
+    redis_port: 6379
+    redis_db: 0
+    redis_namespace: logstash:beaver
+
+  logfiles:
+    -
+      log_path: /var/log/messages
+      tags:
+        - some_unique_tag
+        - some_other_unique_tag
+      type: syslog
