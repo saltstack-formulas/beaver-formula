@@ -1,7 +1,7 @@
-beaver
-=======
+beaver-formula
+==============
 
-beaver
--------
+SaltStack formula to install Beaver Logstash ( http://logstash.net ) agent.
 
-Install the remote Logstash agent Beaver.
+Salt state for installing Beaver - https://github.com/josegonzalez/beaver
+
