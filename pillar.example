@@ -1,4 +1,4 @@
-beaver_test:
+beaver:
   global:
     since_db_path: /var/log/since.db
     server_type: redis
