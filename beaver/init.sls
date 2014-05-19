@@ -51,6 +51,8 @@ beaver:
     - context:
         global: {{ beaver_config.get('global', {}) }}
         logfiles: {{ beaver_config.get('logfiles', {}) }}
+    - require:
+      - file: /etc/beaver
 
 {% if grains['os_family'] == 'Redhat' %}
 /etc/init.d/beaver.conf:
