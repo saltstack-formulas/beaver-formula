@@ -10,7 +10,6 @@ beaver:
   logfiles:
     -
       log_path: /var/log/messages
-      tags:
-        - some_unique_tag
-        - some_other_unique_tag
+      tags: some_unique_tag,some_other_unique_tag
       type: syslog
+      sincedb_write_interval: 3
