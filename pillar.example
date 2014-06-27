@@ -1,8 +1,9 @@
 beaver:
   user: root
   global:
-    transport: redis
-    redis_url: redis://server:6379/0
+    server_type: redis
+    redis_port: 6379
+    redis_db: 0
     redis_namespace: logstash:beaver
     logstash_version: 1
     output: json
