@@ -1,15 +1,20 @@
 beaver:
+  user: root
   global:
-    since_db_path: /var/log/since.db
-    server_type: redis
-    redis_host: hostname
-    redis_port: 6379
-    redis_db: 0
+    transport: redis
+    redis_url: redis://server:6379/0
     redis_namespace: logstash:beaver
-
+    logstash_version: 1
+    output: json
+    sincedb_path: /var/log/since.db
   logfiles:
     -
-      log_path: /var/log/messages
-      tags: some_unique_tag,some_other_unique_tag
-      type: syslog
+      log_path: /var/log/nginx/access-*.log
+      type: nginx-access
+      tags: webserver
+      sincedb_write_interval: 3
+    -
+      log_path: /var/log/nginx/error-*.log
+      type: nginx-error
+      tags: webserver,application_server
       sincedb_write_interval: 3
