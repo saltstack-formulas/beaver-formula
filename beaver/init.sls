@@ -1,28 +1,51 @@
 {% from "beaver/map.jinja" import beaver with context %}
-{% set beaver_config = salt['pillar.get']('beaver', None) %}
-{% set server_type = salt['pillar.get']('beaver:global:server_type', None) %}
+
+{% set transport_type = beaver.transport_type|default('stdout') %}
+{% set virtualenv = beaver.virtualenv|default(false) %}
+
+{% set beaver_opts = '-c /etc/beaver/beaver.conf -l /var/log/beaver/beaver.log' %}
+
+{% if virtualenv %}
+{% set beaver_path = '/opt/beaver/bin/beaver' %}
+{% else %}
+{% set beaver_path = '/usr/local/bin/beaver' %}
+{% endif %}
 
 beaver_requirements:
   pkg.installed:
     - pkgs:
       - {{ beaver.pip }}
-      {% if server_type == 'zeromq' %}
+      {% if transport_type == 'zeromq' %}
       - {{ beaver.zmq }}
       {% endif %}
+      {% if virtualenv %}
+      - {{ beaver['python-virtualenv'] }}
+      {% endif %}
+
+{% if virtualenv %}
+/opt/beaver:
+  virtualenv.managed
+{% endif %}
 
 beaver:
   pip.installed:
     - name: beaver
+    - pre_releases: True
     - require:
       - pkg: beaver_requirements
+    {% if virtualenv %}
+      - virtualenv: /opt/beaver
+    - bin_env: /opt/beaver
+    {% endif %}
+
   service.running:
+    - enable: True
     - watch:
       - file: /etc/beaver/beaver.conf
     {% if grains['os_family'] == 'Debian' %}
     - require:
-      - file: /etc/init/beaver.conf
-    {% endif %}
-    {% if grains['os_family'] == 'Redhat' %}
+      - file: /etc/init.d/beaver
+    {% elif grains['os_family'] == 'Redhat' %}
     - require:
       - file: /etc/init.d/beaver.conf
     {% endif %}
@@ -49,8 +72,8 @@ beaver:
     - template: jinja
     - source: salt://beaver/files/beaver.conf
     - context:
-        global: {{ beaver_config.get('global', {}) }}
-        logfiles: {{ beaver_config.get('logfiles', {}) }}
+        global: {{ beaver.global }}
+        logfiles: {{ beaver.logfiles }}
     - require:
       - file: /etc/beaver
 
@@ -59,18 +82,24 @@ beaver:
   file.managed:
     - user: root
     - group: root
-    - mode: 644
+    - mode: 755
     - template: jinja
     - source: salt://beaver/files/beaver_init.conf
+    - context:
+        beaver_path: {{ beaver_path }}
+        beaver_opts: {{ beaver_opts }}
 {% endif %}
 
 {% if grains['os_family'] == 'Debian' %}
-/etc/init/beaver.conf:
+/etc/init.d/beaver:
   file.managed:
     - user: root
     - group: root
-    - mode: 644
+    - mode: 755
     - template: jinja
-    - source: salt://beaver/files/beaver_upstart.conf
+    - source: salt://beaver/files/beaver_init
+    - context:
+        beaver_path: {{ beaver_path }}
+        beaver_opts: {{ beaver_opts }}
 {% endif %}
 
