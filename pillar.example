@@ -1,21 +1,22 @@
 beaver:
-  user: root
-  global:
-    server_type: redis
-    redis_port: 6379
-    redis_db: 0
-    redis_namespace: logstash:beaver
-    logstash_version: 1
-    output: json
-    sincedb_path: /var/log/since.db
-  logfiles:
-    -
-      log_path: /var/log/nginx/access-*.log
-      type: nginx-access
-      tags: webserver
-      sincedb_write_interval: 3
-    -
-      log_path: /var/log/nginx/error-*.log
-      type: nginx-error
-      tags: webserver,application_server
-      sincedb_write_interval: 3
+  lookup:
+    virtualenv: true
+    global:
+      transport: redis
+      redis_port: 6379
+      redis_db: 0
+      redis_namespace: logstash:beaver
+      logstash_version: 1
+      output: json
+      sincedb_path: /var/log/since.db
+    logfiles:
+      -
+        log_path: /var/log/nginx/access-*.log
+        type: nginx-access
+        tags: webserver
+        sincedb_write_interval: 3
+      -
+        log_path: /var/log/nginx/error-*.log
+        type: nginx-error
+        tags: webserver,application_server
+        sincedb_write_interval: 3
