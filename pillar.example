@@ -20,3 +20,4 @@ beaver:
         type: nginx-error
         tags: webserver,application_server
         sincedb_write_interval: 3
+        exclude: (somehost)
