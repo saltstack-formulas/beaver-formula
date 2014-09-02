@@ -22,6 +22,7 @@ IFS=$' \t\n'
 export IFS
 
 BEAVER_BIN="{{ beaver_path }}"
+BEAVER_LOG="{{ beaver_logfile }}"
 
 [ -r /etc/init.d/functions ] && . /etc/init.d/functions
 [ -r /lib/lsb/init-functions ] && . /lib/lsb/init-functions
@@ -37,7 +38,7 @@ do_start() {
     mkdir -p $RUNDIR
     chown $BEAVER_USER $RUNDIR
     echo -n $"Log Sender server daemon: ${BEAVER_NAME}"
-    su - "${BEAVER_USER}" -s '/bin/bash' -c "${BEAVER_CMD} & echo \$! > ${BEAVER_PID}"
+    su - "${BEAVER_USER}" -s '/bin/bash' -c "${BEAVER_CMD} >> ${BEAVER_LOG} 2>&1 & echo \$! > ${BEAVER_PID}"
     echo '.'
 }
 
