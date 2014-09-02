@@ -3,7 +3,8 @@
 {% set transport_type = beaver.transport_type|default('stdout') %}
 {% set virtualenv = beaver.virtualenv|default(false) %}
 
-{% set beaver_opts = '-c /etc/beaver/beaver.conf -l /var/log/beaver/beaver.log' %}
+{% set beaver_opts = '-c /etc/beaver/beaver.conf' %}
+{% set beaver_logfile = '/var/log/beaver/beaver.log' %}
 
 {% if virtualenv %}
 {% set beaver_path = '/opt/beaver/bin/beaver' %}
@@ -88,6 +89,7 @@ beaver:
     - context:
         beaver_path: {{ beaver_path }}
         beaver_opts: {{ beaver_opts }}
+        beaver_logfile: {{ beaver_logfile }}
 {% endif %}
 
 {% if grains['os_family'] == 'Debian' %}
@@ -101,5 +103,6 @@ beaver:
     - context:
         beaver_path: {{ beaver_path }}
         beaver_opts: {{ beaver_opts }}
+        beaver_logfile: {{ beaver_logfile }}
 {% endif %}
 
