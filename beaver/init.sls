@@ -47,6 +47,8 @@ beaver:
     {% if grains['os_family'] == 'Debian' %}
     - require:
       - file: /etc/init.d/beaver
+      - file: /var/log/beaver
+      - file: /etc/beaver
     {% elif grains['os_family'] == 'Redhat' %}
     - require:
       - file: /etc/init.d/beaver.conf
