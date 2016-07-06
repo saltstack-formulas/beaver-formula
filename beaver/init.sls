@@ -44,6 +44,7 @@ beaver:
     - enable: True
     - watch:
       - file: /etc/beaver/beaver.conf
+    - onchanges:
       - file: /etc/beaver/conf.d/*
     {% if grains['os_family'] == 'Debian' %}
     - require:
