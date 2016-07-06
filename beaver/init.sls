@@ -82,9 +82,7 @@ beaver:
     - source: salt://beaver/files/beaver.conf
     - context:
         global: {{ beaver.global }}
-{% if beaver.logfiles is not none -%}
-        logfiles: {{ beaver.logfiles }}
-{% endif -%}
+#       logfiles: {{ beaver.logfiles }}
     - require:
       - file: /etc/beaver
 
