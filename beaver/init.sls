@@ -52,6 +52,12 @@ beaver:
       - file: /etc/init.d/beaver.conf
     {% endif %}
 
+/etc/beaver:
+  file.directory:
+    - usear: root
+    - group: root
+    - mode: 755
+    - makedirs: True
 /etc/beaver/conf.d:
   file.directory:
     - usear: root
@@ -75,7 +81,9 @@ beaver:
     - source: salt://beaver/files/beaver.conf
     - context:
         global: {{ beaver.global }}
+{% if beaver.logfiles is not none -%}
         logfiles: {{ beaver.logfiles }}
+{% endif -%}
     - require:
       - file: /etc/beaver
 
