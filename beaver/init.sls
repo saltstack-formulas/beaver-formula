@@ -58,6 +58,7 @@ beaver:
     - group: root
     - mode: 755
     - makedirs: True
+
 /etc/beaver/conf.d:
   file.directory:
     - usear: root
