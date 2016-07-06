@@ -3,7 +3,7 @@
 {% set transport_type = beaver.transport_type|default('stdout') %}
 {% set virtualenv = beaver.virtualenv|default(false) %}
 
-{% set beaver_opts = '-c /etc/beaver/beaver.conf' %}
+{% set beaver_opts = '-c /etc/beaver/beaver.conf -C /etc/beaver/conf.d' %}
 {% set beaver_logfile = '/var/log/beaver/beaver.log' %}
 
 {% if virtualenv %}
@@ -43,6 +43,7 @@ beaver:
     - enable: True
     - watch:
       - file: /etc/beaver/beaver.conf
+      - file: /etc/beaver/conf.d/*
     {% if grains['os_family'] == 'Debian' %}
     - require:
       - file: /etc/init.d/beaver
@@ -51,7 +52,7 @@ beaver:
       - file: /etc/init.d/beaver.conf
     {% endif %}
 
-/etc/beaver:
+/etc/beaver/conf.d:
   file.directory:
     - usear: root
     - group: root
