@@ -2,6 +2,7 @@
 
 {% set transport_type = beaver.transport_type|default('stdout') %}
 {% set virtualenv = beaver.virtualenv|default(false) %}
+{% set logfiles = beaver.logfiles|default(false) %}
 
 {% set beaver_opts = '-c /etc/beaver/beaver.conf -C /etc/beaver/conf.d' %}
 {% set beaver_logfile = '/var/log/beaver/beaver.log' %}
@@ -82,7 +83,9 @@ beaver:
     - source: salt://beaver/files/beaver.conf
     - context:
         global: {{ beaver.global }}
-#       logfiles: {{ beaver.logfiles }}
+{% if logfiles %}
+        logfiles: {{ beaver.logfiles }}
+{% endif %}
     - require:
       - file: /etc/beaver
 
