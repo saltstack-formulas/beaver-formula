@@ -43,9 +43,7 @@ beaver:
   service.running:
     - enable: True
     - watch:
-      - file: /etc/beaver/beaver.conf
-    - onchanges:
-      - file: /etc/beaver/conf.d/*
+      - file: /etc/beaver/*
     {% if grains['os_family'] == 'Debian' %}
     - require:
       - file: /etc/init.d/beaver
