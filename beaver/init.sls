@@ -44,14 +44,14 @@ beaver:
     - enable: True
     - watch:
       - file: /etc/beaver/*
-    {% if grains['os_family'] == 'Debian' %}
+    {% if grains['init'] == 'systemd' %}
+    - require:
+      - file: /etc/systemd/system/beaver.service
+    {% else %}
     - require:
       - file: /etc/init.d/beaver
       - file: /var/log/beaver
       - file: /etc/beaver
-    {% elif grains['os_family'] == 'Redhat' %}
-    - require:
-      - file: /etc/init.d/beaver.conf
     {% endif %}
 
 /etc/beaver:
@@ -90,21 +90,18 @@ beaver:
     - require:
       - file: /etc/beaver
 
-{% if grains['os_family'] == 'Redhat' %}
-/etc/init.d/beaver.conf:
+{% if grains['init'] == 'systemd' %}
+/etc/systemd/system/beaver.service:
   file.managed:
     - user: root
     - group: root
     - mode: 755
     - template: jinja
-    - source: salt://beaver/files/beaver_init.conf
+    - source: salt://beaver/files/beaver_systemd.conf
     - context:
         beaver_path: {{ beaver_path }}
         beaver_opts: {{ beaver_opts }}
-        beaver_logfile: {{ beaver_logfile }}
-{% endif %}
-
-{% if grains['os_family'] == 'Debian' %}
+{% else %}
 /etc/init.d/beaver:
   file.managed:
     - user: root
